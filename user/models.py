@@ -1,11 +1,15 @@
-from django.db import models
+import json
+
+import clearbit
 from django.contrib.auth.models import AbstractUser
-# from django.contrib.postgres.fields import HStoreField
-# from django.contrib.postgres.validators import KeysValidator
-# from django.db.models.signals import post_save
-# from django.dispatch import receiver
-#
-# import clearbit
+from django.contrib.postgres.fields import JSONField
+from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+from socialnetwork.settings import CLEARBIT_API_KEY
+
+clearbit.key = CLEARBIT_API_KEY
 
 
 class CustomUser(AbstractUser):
@@ -19,21 +23,25 @@ class CustomUser(AbstractUser):
         return self.email
 
 
-# class Profile(AbstractUser):
-#     """"
-#     Extended User model to save clearbit information with post_signal
-#     """
-#     user = models.OneToOneField(AbstractUser, on_delete=models.CASCADE)
-#     profile_data = HStoreField(validators=KeysValidator)
-#
-#
-# @receiver(post_save, sender=AbstractUser)
-# def create_user_profile(sender, instance, created, **kwargs):
-#     if created:
-#         profile_data = clearbit.Person.find(email=instance.email)
-#         Profile.objects.create(user=instance, profile_data=profile_data)
-#
-#
-# @receiver(post_save, sender=AbstractUser)
-# def save_user_profile(sender, instance, **kwargs):
-#     instance.profile.save(**kwargs)
+class Profile(models.Model):
+    """"
+    Extended User model to save clearbit information with post_signal
+    """
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    profile_data = JSONField(blank=True, null=True, default=None)
+
+    def __str__(self):
+        return f'{self.user.email}'
+
+
+@receiver(post_save, sender=CustomUser)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        profile_data = clearbit.Enrichment.find(email=instance.email, stream=True)
+        if profile_data is not None:
+            profile_data = json.dumps(dict(profile_data))
+        Profile.objects.create(user=instance, profile_data=profile_data)
+
+@receiver(post_save, sender=CustomUser)
+def update_user_profile(sender, instance, created, **kwargs):
+    instance.profile.save(**kwargs)

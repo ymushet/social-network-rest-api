@@ -130,5 +130,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'user.CustomUser'
+
+# API KEYS
 HUNTER_API_EMAIL_VERIFIER_URL = 'https://api.hunter.io/v2/email-verifier'
 HUNTER_API_KEY = '195c420253d181d5e197eef6e80f18ad4c4ce61e'
+CLEARBIT_API_KEY = 'sk_c5b7b1de4ddd482301cf2213912eeb11'
