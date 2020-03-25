@@ -10,6 +10,7 @@ clearbit = "*"
 djangorestframework = "*"
 Django = "*"
 psycopg2-binary = "*"
+djangorestframework-simplejwt = "*"
 
 [requires]
 python_version = "3.7"

@@ -44,4 +44,4 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=CustomUser)
 def update_user_profile(sender, instance, created, **kwargs):
-    instance.profile.save(**kwargs)
+    instance.profile.save()
