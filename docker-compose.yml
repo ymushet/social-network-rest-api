@@ -2,12 +2,15 @@ version: '3'
 
 services:
   db:
-    image: postgres
+    image: postgres:12.2-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db
   webapp:
     build: .
     command: python /src/manage.py runserver 0.0.0.0:8000
