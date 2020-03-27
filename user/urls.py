@@ -1,11 +1,10 @@
-from django.conf.urls import url, include
 from rest_framework import routers
+
 from .views import UserRegisterView
 
-router = routers.DefaultRouter()
+router = routers.SimpleRouter()
 
-router.register('register', UserRegisterView)
+router.register('register', UserRegisterView, basename='register')
 
-urlpatterns = [
-    url('', include(router.urls)),
-]
+urlpatterns = router.urls
+

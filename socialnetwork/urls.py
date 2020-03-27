@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt import views as jwt_views
+from post.views import LikeListView
 
 urlpatterns = [
     # JWT urls
@@ -24,6 +25,7 @@ urlpatterns = [
 
     # custom urls
     path('admin/', admin.site.urls),
-    path('users/', include('user.urls')),
-    path('', include('post.urls')),
+    path('api/users/', include('user.urls')),
+    path('api/posts/', include('post.urls')),
+    path('api/likes/', LikeListView.as_view(), name='like-list')
 ]

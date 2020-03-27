@@ -16,7 +16,6 @@ from datetime import timedelta
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ SECRET_KEY = '&psswku=1s^#^59o*9uz)9qc)!k+rg&+p1y)$0t6p7_%#ic^uq'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -43,8 +41,9 @@ INSTALLED_APPS = [
 
     'user',
     'post',
-]
 
+    'django_extensions',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -77,7 +76,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'socialnetwork.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -87,12 +85,10 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'db', # set in docker-compose.yml
-        'PORT': 5432 # default postgres port
+        'HOST': 'db',  # set in docker-compose.yml
+        'PORT': 5432  # default postgres port
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -111,7 +107,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -146,4 +141,6 @@ AUTH_USER_MODEL = 'user.CustomUser'
 # API KEYS
 HUNTER_API_EMAIL_VERIFIER_URL = 'https://api.hunter.io/v2/email-verifier'
 HUNTER_API_KEY = '195c420253d181d5e197eef6e80f18ad4c4ce61e'
-CLEARBIT_API_KEY = 'sk_c5b7b1de4ddd482301cf2213912eeb11'
+CLEARBIT_API_KEY = 'bla' #'sk_c5b7b1de4ddd482301cf2213912eeb11'
+APPEND_SLASH=False
+USE_TZ=True
