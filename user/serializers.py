@@ -13,9 +13,11 @@ VALIDATION_ERRORS = {
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    """"
+    Profile serializer for displaying clearbit data saved to profile.data
+    """
     data = serializers.JSONField(allow_null=True, source='profile_data',
                                  binary=True)
-
     class Meta:
         model = Profile
         fields = ('data',)
@@ -66,6 +68,9 @@ class RegisterCustomUserSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
+        """"
+        Password match validation
+        """
         password = attrs.get('password')
         password2 = attrs.get('password2')
         if password != password2:

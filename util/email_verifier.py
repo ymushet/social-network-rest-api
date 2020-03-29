@@ -12,6 +12,7 @@ logging.getLogger(__name__)
 class EmailVerifier:
     """"
     API to call hunter.co to verify given email
+    Validation performed only with USE_EMAIL_VERIFIER=True
     """
     url = settings.HUNTER_API_EMAIL_VERIFIER_URL
     api_key = settings.HUNTER_API_KEY
