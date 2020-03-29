@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'post',
 
     'django_extensions',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

@@ -12,6 +12,7 @@ Django = "*"
 psycopg2-binary = "*"
 djangorestframework-simplejwt = "*"
 django-extensions = "*"
+drf-yasg = "*"
 
 [requires]
 python_version = "3.7"
