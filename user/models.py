@@ -1,6 +1,8 @@
 import json
+import logging
 
 import clearbit
+import requests
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import JSONField
 from django.db import models
@@ -10,6 +12,7 @@ from django.dispatch import receiver
 from socialnetwork.settings import CLEARBIT_API_KEY
 
 clearbit.key = CLEARBIT_API_KEY
+logging.getLogger(__name__)
 
 
 class CustomUser(AbstractUser):
@@ -36,11 +39,18 @@ class Profile(models.Model):
 
 @receiver(post_save, sender=CustomUser)
 def create_user_profile(sender, instance, created, **kwargs):
+    profile_data = None
     if created:
-        profile_data = clearbit.Enrichment.find(email=instance.email, stream=True)
+        try:
+            profile_data = clearbit.Enrichment.find(email=instance.email, stream=True)
+            logging.info(['[CLEARBIT] Enrichment for '
+                          '{} data {}'.format(instance.email, profile_data)])
+        except requests.exceptions.HTTPError as e:
+            logging.error('[ERROR]: Clearbit: {}'.format(e))
         if profile_data is not None:
             profile_data = json.dumps(dict(profile_data))
         Profile.objects.create(user=instance, profile_data=profile_data)
+
 
 @receiver(post_save, sender=CustomUser)
 def update_user_profile(sender, instance, created, **kwargs):

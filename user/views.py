@@ -6,7 +6,7 @@ from .serializers import RegisterCustomUserSerializer
 
 class UserRegisterView(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """"
-    user/register view
+    User register view
     This view will validate email, create user and profile instances and
     return this data to a user
     """

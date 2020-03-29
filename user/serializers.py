@@ -1,9 +1,15 @@
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
-from rest_framework import serializers
+from rest_framework import serializers, status
 
 from util.email_verifier import EmailVerifier
 from .models import CustomUser, Profile
+
+VALIDATION_ERRORS = {
+    'risky': 'Could not validate personal email, please use email with organisation domain.',
+    'undeliverable': 'Could not validate email, please use existing email with organisation domain.',
+    'unknown_error': 'Could not validate email. Please contact support to resolve this error'
+}
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -46,7 +52,18 @@ class RegisterCustomUserSerializer(serializers.ModelSerializer):
         """
         verifier = EmailVerifier(value)
         if not verifier.is_valid():
-            raise serializers.ValidationError(verifier.errors)
+            if verifier.errors:
+                raise serializers.ValidationError(verifier.errors)
+            error_code = verifier.data.get('result', 'unknown_error')
+            if verifier.status_code == status.HTTP_200_OK:
+                raise serializers.ValidationError({error_code:
+                                                       VALIDATION_ERRORS[error_code]})
+            else:
+                # This errors are 'Payment required' or 'Rate limit' errors etc, they
+                # logged in by the EmailVerifier and should not be exposed to a user.
+                raise serializers.ValidationError({'unknown_error':
+                                                       VALIDATION_ERRORS['unknown_error']})
+        return value
 
     def validate(self, attrs):
         password = attrs.get('password')
